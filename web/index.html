@@ -94,5 +94,28 @@
       loadMainDartJs();
     }
   </script>
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-storage.js"></script>
+
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+       https://firebase.google.com/docs/web/setup#available-libraries -->
+
+  <script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyA_aa2Br5QlKufegA_mA6DnLFsHZRIDshM",
+    authDomain: "diaryapp-c138b.firebaseapp.com",
+    projectId: "diaryapp-c138b",
+    storageBucket: "diaryapp-c138b.appspot.com",
+    messagingSenderId: "188849425694",
+    appId: "1:188849425694:web:6589bb519f39c682a7cd0f"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+</script>
 </body>
 </html>
