@@ -1,11 +1,13 @@
-import 'package:diary_app01/screens/main_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:diary_app01/model/users.dart';
+import 'package:diary_app01/services/srvice.dart';
 import 'package:diary_app01/widgets/input_decorations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-class LoginForm extends StatelessWidget {
-  const LoginForm({
+class CreateAccountForm extends StatelessWidget {
+  const CreateAccountForm({
     Key? key,
     required TextEditingController emailTextController,
     required TextEditingController passwordTextController,
@@ -27,6 +29,7 @@ class LoginForm extends StatelessWidget {
       child: Column(
         mainAxisSize:MainAxisSize.min,
         children: [
+          Text("Please Enter a valid Username & Password contain 6 digit "),
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: TextFormField(
@@ -66,14 +69,23 @@ class LoginForm extends StatelessWidget {
               ),
               onPressed: (){
                 if (_globalKey!.currentState!.validate()) {
-                  FirebaseAuth.instance.signInWithEmailAndPassword(email: _emailTextController.text, password: _passwordTextController.text)
+                  String email = _emailTextController.text;
+                  FirebaseAuth.instance.createUserWithEmailAndPassword(
+                      email: _emailTextController.text, password: _passwordTextController.text)
                       .then((value) {
-                        return Navigator.push(context, MaterialPageRoute(builder: (context){
-                          return MainPage();
-                        }));
+                        if (value.user!= null) {
+                          String uid = value.user!.uid;
+                          DiaryService()
+                              .createUser(email.toString().split('@')[0], context, uid).then((value) {
+                                FirebaseAuth.instance.signInWithEmailAndPassword(email: 
+                                email, password: _passwordTextController.text).then((value) {
+                                  return null;
+                                });
+                              });
+                        }
                       });
                 }
-              }, child: Text('Sign In'))
+              }, child: Text('Create Account'))
         ],
       ),
     );
