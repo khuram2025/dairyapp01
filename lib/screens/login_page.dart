@@ -1,19 +1,12 @@
+import 'package:diary_app01/widgets/input_decorations.dart';
+import 'package:diary_app01/widgets/login_form.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
-  final TextEditingController _emailTextController;
-  final TextEditingController _passwordTextController;
+  final TextEditingController _emailTextController = TextEditingController();
+  final TextEditingController _passwordTextController = TextEditingController();
+  final GlobalKey<FormState>? _globalKey = GlobalKey<FormState>();
 
-  final GlobalKey<FormState>? _globalKey;
-
-  const LoginPage({Key? key,
-    GlobalKey<FormState>? formkey,
-    required TextEditingController emailTextController,
-    required TextEditingController passwordTextController}) :
-        _emailTextController = emailTextController,
-        _passwordTextController = passwordTextController,
-        _globalKey = formkey,
-        super(key: key);
 
 
   @override
@@ -37,16 +30,11 @@ class LoginPage extends StatelessWidget {
               children: [
                 SizedBox(width: 300,
                 height: 300,
-                child: Form(
-                  child: Column(
-                    mainAxisSize:MainAxisSize.min,
-                    children: [
-                      TextFormField(
-                        controller: _emailTextController,
-                      )
-                    ],
-                  ),
-                ),)
+
+                child: LoginForm(
+                  formKey: _globalKey,
+                    emailTextController: _emailTextController,
+                    passwordTextController: _passwordTextController),)
               ],
             ),
             Expanded(
@@ -60,4 +48,8 @@ class LoginPage extends StatelessWidget {
       ),
     );
   }
+
+
 }
+
+
