@@ -1,3 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:diary_app01/model/users.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
@@ -67,32 +71,52 @@ class _MainPageState extends State<MainPage> {
                 ),
 
               ),
-              Container(
-                child: Row(
-                  children: [
+              StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance.collection('users').snapshots(),
+
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState ==ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+
+                    }
+                    final usersListStream = snapshot.data!.docs.map((docs) {
+                      return MUser.fromDocument(docs);
+                    }).where((muser) {
+                      return (muser.uid == FirebaseAuth.instance.currentUser!.uid);
+                    }).toList();
+
+                    MUser curUser = usersListStream[0];
+
+
+                    return Container(
+                    child: Row(
+                    children: [
                     Column(
-                      children: [
-                        Expanded(child: InkWell(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: CircleAvatar(
-                              radius: 30,
-                              backgroundImage: NetworkImage(
-                                "https://picsum.photos/200/300",
-                              ),
-                              backgroundColor: Colors.transparent,
-                            ),
-                          ),
-                        )),
-                        Text("Khan Ji", style: TextStyle(
-                          color: Colors.grey
-                        ),)
-                      ],
+                    children: [
+                    Expanded(child: InkWell(
+                    child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage(
+                    "https://picsum.photos/200/300",
+                    ),
+                    backgroundColor: Colors.transparent,
+                    ),
+                    ),
+                    )),
+                    Text(curUser.dsiplayName!, style: TextStyle(
+                    color: Colors.grey
+                    ),)
+                    ],
                     ),
                     IconButton(onPressed: (){}, icon: Icon(Icons.logout_outlined, size: 19, color: Colors.redAccent,))
-                  ],
-                ),
-              )
+                    ],
+                    ),
+                    );
+
+              }),
+
             ],
           )
         ],
